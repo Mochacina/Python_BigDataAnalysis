@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # CSV 파일 읽기
 csv_filename = 'cafe_menu.csv'
@@ -15,5 +16,27 @@ except Exception as e:
 
 print(df_loaded.head(3))
 
+df_loaded['new'] = 0
+
 df_loaded.drop(1, axis=0, inplace=True)
+print(df_loaded)
+
+df_loaded.drop('new', axis=1, inplace=True)
+print(df_loaded)
+
+print("loc[0:3]")
+print(df_loaded.loc[0:3])
+
+print("iloc[0:3]")
+print(df_loaded.iloc[:,:])
+
+df_loaded['원산지'] = np.nan
+print(df_loaded)
+
+df_loaded.loc['시즌'] = {'메뉴':'닌자버블티', '가격':10000, '칼로리':100}
+print(df_loaded)
+
+#print(df_loaded.sort_index(ascending=False))
+df_loaded.sort_values(['가격','칼로리'], ascending=(True,True), inplace=True)
+df_loaded.reset_index(drop=True,inplace=True)
 print(df_loaded)
