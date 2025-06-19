@@ -24,3 +24,5 @@ print(df_corr)
 col = df_corr.loc['DE1':'DE77'].idxmax()
 print(round(df[col].mean(),4))
 
+import pandas as pd
+df = pd.read_csv("./gichul\gichul7\clam.csv")
