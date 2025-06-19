@@ -39,12 +39,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 import xgboost as xgb
 import lightgbm as lgb
+from sklearn.metrics import f1_score
 
 dt = DecisionTreeClassifier(random_state=0)
 dt.fit(x_tr, y_tr)
 pred = dt.predict(x_val)
 
-from sklearn.metrics import f1_score
 print("f1_score(dt):", f1_score(y_val, pred, average='macro')) # f1_score(dt): 0.9167995817564094
 
 rf = RandomForestClassifier(random_state=0)
@@ -52,5 +52,28 @@ rf.fit(x_tr, y_tr)
 pred = rf.predict(x_val)
 print("f1_score(rf):", f1_score(y_val, pred, average='macro')) # f1_score(rf): 0.9277616846430405
 
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+y_tr_adj = le.fit_transform(y_tr)
+
 xg = xgb.XGBClassifier(random_state=0)
-xg.fit(x_tr, y_tr)
+xg.fit(x_tr, y_tr_adj)
+pred = xg.predict(x_val)
+pred = le.inverse_transform(pred)
+
+print("f1_score(xg):", f1_score(y_val, pred, average='macro')) # f1_score(xg): 0.9374839068652628
+
+lg = lgb.LGBMClassifier(random_state=0)
+lg.fit(x_tr,y_tr)
+pred = lg.predict(x_val)
+
+print("f1_score(lg):", f1_score(y_val, pred, average='macro')) # f1_score(lg): 0.9319703995747778
+
+pred = lg.predict(test)
+submit = pd.DataFrame({
+    'pred':pred
+})
+
+print(submit)
+
+submit.to_csv("result.csv", index=False)
